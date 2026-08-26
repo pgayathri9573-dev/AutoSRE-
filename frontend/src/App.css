@@ -454,3 +454,158 @@ body {
 .sidebar.closed * {
   display: none;
 }
+/* ===== LIGHT THEME ===== */
+
+body.light-theme {
+  background: #eef6ff;
+  color: #102a43;
+}
+
+body.light-theme .dashboard {
+  background: linear-gradient(135deg, #eef6ff, #cfe8ff);
+}
+
+body.light-theme .sidebar {
+  background: #ffffff;
+  border-right: 1px solid #d5e3f0;
+}
+
+body.light-theme .sidebar-nav button {
+  color: #526579;
+}
+
+body.light-theme .sidebar-nav button:hover,
+body.light-theme .sidebar-nav button.active {
+  background: #e5f2ff;
+  color: #102a43;
+}
+
+body.light-theme .metric-card,
+body.light-theme .status-card {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: #b9d9ef;
+  color: #102a43;
+}
+
+body.light-theme .dashboard-header p,
+body.light-theme .metric-info,
+body.light-theme .activity-item p {
+  color: #526579;
+}
+
+body.light-theme .search-box {
+  background: white;
+  border-color: #c7d9e8;
+}
+
+body.light-theme .search-box input {
+  color: #102a43;
+}
+
+body.light-theme .profile small {
+  color: #64748b;
+}
+
+.theme-icon {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 20px;
+}
+.profile {
+  position: relative;
+  cursor: pointer;
+}
+
+.profile-menu {
+  position: absolute;
+  top: 55px;
+  right: 0;
+  width: 230px;
+  padding: 18px;
+  background: #111c2d;
+  border: 1px solid #334155;
+  border-radius: 14px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+}
+
+.profile-menu h3 {
+  margin: 0;
+  color: white;
+}
+
+.profile-menu p {
+  margin: 5px 0 12px;
+  color: #94a3b8;
+}
+
+.profile-menu hr {
+  border: none;
+  border-top: 1px solid #334155;
+  margin: 12px 0;
+}
+
+.profile-menu button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: white;
+  text-align: left;
+  cursor: pointer;
+}
+
+.profile-menu button:hover {
+  background: #1f2937;
+}
+/* Clean dashboard layout */
+.dashboard-page {
+  width: 100%;
+  min-height: 100vh;
+  padding-bottom: 60px;
+}
+
+.dashboard-page section {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.profile-page {
+  width: 100%;
+  padding: 50px 40px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.profile-card {
+  max-width: 700px;
+  margin: 30px auto;
+  padding: 30px;
+  box-sizing: border-box;
+}
+
+.overview {
+  width: 100%;
+  margin-top: 40px;
+}
+
+.metrics {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  padding: 20px 0;
+}
+
+.metric-card {
+  box-sizing: border-box;
+}
+
+.system-status,
+.activity {
+  width: 100%;
+  margin-top: 40px;
+}
