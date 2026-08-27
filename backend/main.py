@@ -1,7 +1,16 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+import psutil
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/")
@@ -15,6 +24,14 @@ def health():
         "status": "healthy",
         "service": "AutoSRE Backend"
     }
+@app.get("/metrics")
+def metrics():
+    return {
+        "cpu": psutil.cpu_percent(interval=1),
+        "memory": psutil.virtual_memory().percent,
+        "disk": psutil.disk_usage("/").percent
+    }
+
 
 
 class ErrorReport(BaseModel):

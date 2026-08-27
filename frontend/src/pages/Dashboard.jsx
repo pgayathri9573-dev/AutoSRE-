@@ -1,7 +1,41 @@
 import { useState } from "react";
+import { useEffect } from "react";
 import SystemChart from "../SystemChart";
 
 function Dashboard({ onLogout }) {
+  useEffect(() => {
+  fetch("http://localhost:8001/health")
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Backend is not healthy");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Backend connected successfully:", data);
+    })
+    .catch((error) => {
+      console.error("Backend connection failed:", error);
+    });
+}, []);
+useEffect(() => {
+  const fetchMetrics = async () => {
+    try {
+      const response = await fetch("http://localhost:8001/metrics");
+      const data = await response.json();
+
+      setMetrics(data);
+    } catch (error) {
+      console.error("Metrics fetch failed:", error);
+    }
+  };
+
+  fetchMetrics();
+
+  const interval = setInterval(fetchMetrics, 5000);
+
+  return () => clearInterval(interval);
+}, []);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activePage, setActivePage] = useState("Dashboard");
   const [showNotifications, setShowNotifications] = useState(false);
@@ -13,6 +47,12 @@ const [accountEmail, setAccountEmail] = useState("admin@autosre.com");
 const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
 const [securityMessage, setSecurityMessage] = useState("");
 const [searchTerm, setSearchTerm] = useState("");
+const [metrics, setMetrics] = useState({
+  cpu: 0,
+  memory: 0,
+  disk: 0,
+});
+const [diagnosisResult, setDiagnosisResult] = useState(null);
 const handleSearch = () => {
   const term = searchTerm.trim().toLowerCase();
 
@@ -37,6 +77,34 @@ const handleSearch = () => {
 
   alert(`"${searchTerm}" not found`);
 };
+
+const handleDiagnose = async () => {
+  try {
+    const response = await fetch(
+      "http://localhost:8001/diagnose",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          service: "Database",
+          error: "database connection refused",
+          severity: "high",
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    setDiagnosisResult(data);
+console.log("Diagnosis result:", data);
+  } catch (error) {
+    console.error("Diagnosis failed:", error);
+  }
+};
+  
+  
     return (
   <div className="dashboard-layout">
 
@@ -104,7 +172,7 @@ const handleSearch = () => {
 
       <div className="metric-card">
         <h3>Disk Usage</h3>
-        <strong>42%</strong>
+        <strong>{metrics.disk}</strong>
       </div>
     </div>
   </div>
@@ -347,6 +415,35 @@ const handleSearch = () => {
             
 
           <SystemChart /> 
+          <button onClick={handleDiagnose}>
+  🔍 Test AI Diagnosis
+</button>
+{diagnosisResult && (
+  <div className="diagnosis-card">
+    <h2>🤖 AI Diagnosis</h2>
+
+    <p>
+      <strong>Service:</strong> {diagnosisResult.service}
+    </p>
+
+    <p>
+      <strong>Error:</strong> {diagnosisResult.error}
+    </p>
+
+    <p>
+      <strong>Severity:</strong> {diagnosisResult.severity}
+    </p>
+
+    <p>
+      <strong>Diagnosis:</strong> {diagnosisResult.diagnosis}
+    </p>
+
+    <p>
+      <strong>Suggested Solution:</strong>{" "}
+      {diagnosisResult.suggested_solution}
+    </p>
+  </div>
+)}
           
 
 {activePage === "Profile" && (
@@ -515,10 +612,10 @@ const handleSearch = () => {
                   <span>⚡</span>
                 </div>
 
-                <p className="metric-value">52%</p>
+                <p className="metric-value">{metrics.cpu}%</p>
 
                 <div className="progress">
-                  <div className="progress-bar cpu"></div>
+                  <div className="progress-bar cpu" style={{ width: `${metrics.cpu}%` }}></div>
                 </div>
 
                 <p className="metric-info">Normal usage</p>
@@ -530,10 +627,10 @@ const handleSearch = () => {
                   <span>◈</span>
                 </div>
 
-                <p className="metric-value">62%</p>
+                <p className="metric-value">{metrics.memory}%</p>
 
                 <div className="progress">
-                  <div className="progress-bar memory"></div>
+                  <div className="progress-bar memory" style={{ width: `${metrics.memory}%` }}></div>
                 </div>
 
                 <p className="metric-info">Healthy</p>
