@@ -29,7 +29,9 @@ def metrics():
     return {
         "cpu": psutil.cpu_percent(interval=1),
         "memory": psutil.virtual_memory().percent,
-        "disk": psutil.disk_usage("/").percent
+        "disk": psutil.disk_usage("/").percent,
+        "error_rate": 0.8,
+        "latency": 120
     }
 
 

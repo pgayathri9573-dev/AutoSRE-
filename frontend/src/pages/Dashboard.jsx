@@ -12,8 +12,10 @@ function Dashboard({ onLogout }) {
       return response.json();
     })
     .then((data) => {
-      console.log("Backend connected successfully:", data);
-    })
+  console.log("Backend connected successfully:", data);
+  setHealthStatus(data.status);
+})
+    
     .catch((error) => {
       console.error("Backend connection failed:", error);
     });
@@ -25,6 +27,7 @@ useEffect(() => {
       const data = await response.json();
 
       setMetrics(data);
+      setMonitoringStatus("Active");
     } catch (error) {
       console.error("Metrics fetch failed:", error);
     }
@@ -52,6 +55,8 @@ const [metrics, setMetrics] = useState({
   memory: 0,
   disk: 0,
 });
+const [healthStatus, setHealthStatus] = useState("Checking...");
+const [monitoringStatus, setMonitoringStatus] = useState("Checking...");
 const [diagnosisResult, setDiagnosisResult] = useState(null);
 const handleSearch = () => {
   const term = searchTerm.trim().toLowerCase();
@@ -162,12 +167,12 @@ console.log("Diagnosis result:", data);
     <div className="metric-cards">
       <div className="metric-card">
         <h3>CPU Usage</h3>
-        <strong>56%</strong>
+        <strong>{metrics.cpu}%</strong>
       </div>
 
       <div className="metric-card">
         <h3>Memory Usage</h3>
-        <strong>68%</strong>
+        <strong>{metrics.memory}%</strong>
       </div>
 
       <div className="metric-card">
@@ -642,7 +647,7 @@ console.log("Diagnosis result:", data);
                   <span>⚠</span>
                 </div>
 
-                <p className="metric-value">0.8%</p>
+                <p className="metric-value">{metrics.error_rate}%</p>
 
                 <div className="progress">
                   <div className="progress-bar error"></div>
@@ -657,7 +662,7 @@ console.log("Diagnosis result:", data);
                   <span>◷</span>
                 </div>
 
-                <p className="metric-value">120 ms</p>
+                <p className="metric-value">{metrics.latency} ms</p>
 
                 <div className="progress">
                   <div className="progress-bar latency"></div>
@@ -683,7 +688,7 @@ console.log("Diagnosis result:", data);
                 <span className="status-icon">✓</span>
                 <div>
                   <h3>API Service</h3>
-                  <p>Operational</p>
+                  <p>{healthStatus}</p>
                 </div>
               </div>
 
@@ -699,7 +704,7 @@ console.log("Diagnosis result:", data);
                 <span className="status-icon">✓</span>
                 <div>
                   <h3>Monitoring</h3>
-                  <p>Active</p>
+                  <p>{monitoringStatus}</p>
                 </div>
               </div>
 
@@ -729,7 +734,7 @@ console.log("Diagnosis result:", data);
 
                 <div>
                   <h3>CPU usage monitored</h3>
-                  <p>Current CPU usage is 52%</p>
+                  <p>Current CPU usage is {metrics.cpu}%</p>
                 </div>
 
                 <span className="time">2 min ago</span>
