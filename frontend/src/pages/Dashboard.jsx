@@ -286,9 +286,9 @@ console.log("Diagnosis result:", data);
     <div className="report-card">
       <h3>System Health Report</h3>
       <p>Overall system health: <strong>Healthy</strong></p>
-      <p>CPU Usage: <strong>56%</strong></p>
-      <p>Memory Usage: <strong>68%</strong></p>
-      <p>Disk Usage: <strong>42%</strong></p>
+      <p>CPU Usage: <strong>{metrics.cpu}%</strong></p>
+      <p>Memory Usage: <strong>{metrics.memory}%</strong></p>
+      <p>Disk Usage: <strong>{metrics.disk}%</strong></p>
     </div>
 
     <div className="report-card">
